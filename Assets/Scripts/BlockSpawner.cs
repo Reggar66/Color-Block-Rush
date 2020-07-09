@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,9 +20,9 @@ public class BlockSpawner : MonoBehaviour
     private int gameMode = 0;
 
     [Header("PowerUps")] public GameObject heal;
-    public float timeToHeal = 3.4f;
-    private float healDelayFactor = 30.4f;
-    private float timeSinceLastHeal = 0f;
+    public float timeLeftToHeal = 3f;
+    public float timeToHeal = 3f;
+    public TextMeshProUGUI healTimerText;
 
     // Singleton
     private static BlockSpawner instance;
@@ -53,7 +54,7 @@ public class BlockSpawner : MonoBehaviour
     private void Update()
     {
         GameModePicker();
-        
+
         if (Time.time >= spawnTime)
         {
             GameModeHandler();
@@ -133,15 +134,25 @@ public class BlockSpawner : MonoBehaviour
 
     private void SpawnHeal()
     {
-        if (timeSinceLastHeal >= timeToHeal * healDelayFactor)
+        if (timeLeftToHeal <= 0f)
         {
-            Instantiate(heal, new Vector3(-5.5f, 10f), Quaternion.identity);
-            timeSinceLastHeal = 0f;
+            float x = Random.Range(-5.5f, 5.5f);
+            Instantiate(heal, new Vector3(x, 10f), Quaternion.identity);
+            timeLeftToHeal = timeToHeal;
         }
         else
         {
-            timeSinceLastHeal += Time.deltaTime;
-            Debug.Log(timeSinceLastHeal);
+            timeLeftToHeal -= Time.deltaTime;
+            if (timeLeftToHeal < 0)
+            {
+                timeLeftToHeal = 0;
+            }
+
+            //Debug.Log(timeLeftToHeal);
         }
+
+        float minutes = Mathf.Floor(timeLeftToHeal / 60);
+        float seconds = Mathf.Floor(timeLeftToHeal % 60);
+        healTimerText.SetText(minutes.ToString("00") + ":" + seconds.ToString("00"));
     }
 }
