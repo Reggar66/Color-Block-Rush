@@ -47,11 +47,19 @@ public class GameController : MonoBehaviour
 
     IEnumerator SlowDownTime(int life)
     {
+        // Change time scale (slow down)
         Time.timeScale = 1f / slowFactor;
         Time.fixedDeltaTime /= slowFactor;
 
+        // Wait 2 seconds before changing time back to normal
+        // (Also divided by slow factor, to make it actual 2 sec after time slows down)
         yield return new WaitForSeconds(2f / slowFactor);
+        
+        // Revert time changes
         Time.timeScale = 1f;
+        Time.fixedDeltaTime *= slowFactor;
+        
+        // Check if dead
         if (life == 0)
         {
             EndGame();

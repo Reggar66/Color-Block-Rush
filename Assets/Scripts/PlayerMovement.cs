@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
 
     private float x_axis = 0;
 
+    private bool moveLeft = false;
+    private bool moveRight = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
         //Movement2();
     }
 
+    // Movement with use of x axis
     private void Movement()
     {
         float x = x_axis * movementSpeed * Time.deltaTime;
@@ -39,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         rb2d.MovePosition(newPosition);
     }
 
+    // Updating "virtual" x axis. Used by Movement()
     private void UpdateX_Axis()
     {
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A))
@@ -47,11 +52,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || moveRight)
         {
             x_axis = Mathf.MoveTowards(x_axis, 1f, 3f * Time.deltaTime);
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A) || moveLeft)
         {
             x_axis = Mathf.MoveTowards(x_axis, -1f, 3f * Time.deltaTime);
         }
@@ -61,15 +66,36 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void TouchMoveLeft()
+    {
+        moveLeft = true;
+    }
+
+    public void TouchStopMoveLeft()
+    {
+        moveLeft = false;
+    }
+
+    public void TouchMoveRight()
+    {
+        moveRight = true;
+    }
+
+    public void TouchStopMoveRight()
+    {
+        moveRight = false;
+    }
+
+
+    public void TouchStopMovement()
+    {
+        x_axis = 0f;
+    }
+
     private void Movement2()
     {
         float x = Input.GetAxis("Horizontal") * movementSpeed * Time.deltaTime;
         Debug.Log(Input.GetAxis("Horizontal"));
         rb2d.MovePosition(rb2d.position + Vector2.right * x);
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        
     }
 }
