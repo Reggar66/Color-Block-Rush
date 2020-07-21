@@ -137,7 +137,7 @@ public class BlockSpawner : MonoBehaviour
         if (timeLeftToHeal <= 0f)
         {
             float x = Random.Range(-5.5f, 5.5f);
-            Instantiate(heal, new Vector3(x, 10f), Quaternion.identity);
+            Instantiate(heal, new Vector3(x, spawnPoints[0].transform.position.y), Quaternion.identity);
             timeLeftToHeal = timeToHeal;
         }
         else
